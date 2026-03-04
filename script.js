@@ -6,6 +6,24 @@ let bookmarkTitle = document.getElementById('bookmark-name');
 let bookmarkUrl = document.getElementById('bookmark-url');
 let categorySelect = document.getElementById('category-select');
 
+function renderBookmarks() {
+    bookmarkList.innerHTML = '';
+    bookmarks.forEach(function(bookmark) {
+        let listItem = document.createElement('li');
+        let link = document.createElement('a');
+        let deleteBtn = document.createElement('button');
+        let categoryLabel = document.createElement('span');
+        categoryLabel.textContent = ' - ' + bookmark.category;
+        deleteBtn.textContent = 'Delete';
+        link.href = bookmark.url;
+        link.textContent = bookmark.title;
+        listItem.appendChild(link);
+        listItem.appendChild(categoryLabel);
+        listItem.appendChild(deleteBtn);
+        bookmarkList.appendChild(listItem);
+    });
+}
+
 bookmarkForm.addEventListener('submit', function(event) {
     event.preventDefault();
     let title = bookmarkTitle.value.trim();
@@ -23,6 +41,9 @@ bookmarkForm.addEventListener('submit', function(event) {
 
     localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
 
-    console.log('Bookmark added:', bookmark);
+    renderBookmarks();
 
+    console.log('Bookmark added:', bookmark);
 });
+
+renderBookmarks();
