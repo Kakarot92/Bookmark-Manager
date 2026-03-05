@@ -1,49 +1,111 @@
-let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
-
-let bookmarkForm = document.getElementById('bookmark-form');
-let bookmarkList = document.getElementById('bookmark-list');
-let bookmarkTitle = document.getElementById('bookmark-name');
-let bookmarkUrl = document.getElementById('bookmark-url');
-let categorySelect = document.getElementById('category-select');
-
+// Initialize bookmarks from localStorage or start with an empty array
+let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+let editingId = null;
+// Get references to DOM elements
+let bookmarkForm = document.getElementById("bookmark-form");
+let bookmarkList = document.getElementById("bookmark-list");
+let bookmarkTitle = document.getElementById("bookmark-name");
+let bookmarkUrl = document.getElementById("bookmark-url");
+let categorySelect = document.getElementById("category-select");
+// Function to render bookmarks on the page
 function renderBookmarks() {
-    bookmarkList.innerHTML = '';
-    bookmarks.forEach(function(bookmark) {
-        let listItem = document.createElement('li');
-        let link = document.createElement('a');
-        let deleteBtn = document.createElement('button');
-        let categoryLabel = document.createElement('span');
-        categoryLabel.textContent = ' - ' + bookmark.category;
-        deleteBtn.textContent = 'Delete';
-        link.href = bookmark.url;
-        link.textContent = bookmark.title;
-        listItem.appendChild(link);
-        listItem.appendChild(categoryLabel);
-        listItem.appendChild(deleteBtn);
-        bookmarkList.appendChild(listItem);
+  bookmarkList.innerHTML = "";
+  bookmarks.forEach(function (bookmark) {
+    let listItem = document.createElement("li");
+    let link = document.createElement("a");
+    let editBtn = document.createElement("button");
+    let deleteBtn = document.createElement("button");
+    let categoryLabel = document.createElement("span");
+    categoryLabel.textContent = " - " + bookmark.category;
+    editBtn.textContent = "Edit";
+    editBtn.dataset.id = bookmark.id;
+    // Event listener for edit button
+    editBtn.addEventListener("click", function () {
+      let id = parseInt(this.dataset.id);
+      editBookmark(id);
     });
+    deleteBtn.textContent = "Delete";
+    link.href = bookmark.url;
+    deleteBtn.dataset.id = bookmark.id;
+    // Event listener for delete button
+    deleteBtn.addEventListener("click", function () {
+      // Get the id of the clicked bookmark
+      let id = parseInt(this.dataset.id);
+      // Remove the bookmarks from array based on the id
+      bookmarks = bookmarks.filter((b) => b.id !== id);
+      // Update localStorage with the new bookmarks array
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+
+      renderBookmarks();
+    });
+    link.textContent = bookmark.title;
+    listItem.appendChild(link);
+    listItem.appendChild(editBtn);
+    listItem.appendChild(categoryLabel);
+    listItem.appendChild(deleteBtn);
+    bookmarkList.appendChild(listItem);
+  });
 }
 
-bookmarkForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    let title = bookmarkTitle.value.trim();
-    let url = bookmarkUrl.value.trim();
+//Function to edit a bookmark
+
+function editBookmark(id) {
+  let bookmark = bookmarks.find((b) => b.id === id);
+  bookmarkTitle.value = bookmark.title;
+  bookmarkUrl.value = bookmark.url;
+  categorySelect.value = bookmark.category;
+  editingId = id;
+}
+
+// Event listener for form submission to add a new bookmark
+bookmarkForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  let title = bookmarkTitle.value.trim();
+  if (!title) {
+    alert("Please enter a bookmark name.");
+    return;
+  }
+  let url = bookmarkUrl.value.trim();
+  // Simple URL validation
+  if (!url || !/^https?:\/\/\S+$/.test(url)) {
+    // Check if URL starts with http:// or https://
+    alert("Please enter a valid URL (starting with http:// or https://).");
+    // If the URL doesn't start with http:// or https://, prepend http:// return to prevent invalid URLs
+    return;
+  }
+    //Editing an existing bookmark if editingId is set, otherwise add a new bookmark
+  if (editingId) {
+    // Find the bookmark being edited by its id
+    let bookmark = bookmarks.find((b) => b.id === editingId);
+    bookmark.title = title;
+    bookmark.url = url;
+    bookmark.category = categorySelect.value;
+    editingId = null;
+  } else {
     let category = categorySelect.value;
 
     let bookmark = {
-        id: Date.now(),
-        title: title,
-        url: url,
-        category: category
+      id: Date.now(),
+      title: title,
+      url: url,
+      category: category,
     };
-
+    // Add the new bookmark to the bookmarks array
     bookmarks.push(bookmark);
+  }
+  // add title and url validation
 
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+  // Create a new bookmark object with a unique id, title, url, and category
 
-    renderBookmarks();
+  // Save the updated bookmarks array to localStorage
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  // re-render the bookmarks to reflect the new addition
+  renderBookmarks();
+  bookmarkTitle.value = "";
+  bookmarkUrl.value = "";
 
-    console.log('Bookmark added:', bookmark);
+  console.log("Bookmark added:", bookmark);
 });
-
+// Initial render of bookmarks on page load
 renderBookmarks();
