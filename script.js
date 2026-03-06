@@ -29,6 +29,7 @@ function renderBookmarks(list) {
     });
     deleteBtn.textContent = "Delete";
     link.href = bookmark.url;
+    link.target = "_blank";
     deleteBtn.dataset.id = bookmark.id;
     // Event listener for delete button
     deleteBtn.addEventListener("click", function () {
