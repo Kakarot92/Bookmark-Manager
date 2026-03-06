@@ -6,15 +6,18 @@ let bookmarkForm = document.getElementById("bookmark-form");
 let bookmarkList = document.getElementById("bookmark-list");
 let bookmarkTitle = document.getElementById("bookmark-name");
 let bookmarkUrl = document.getElementById("bookmark-url");
+let searchInput = document.getElementById("search-input");
 let categorySelect = document.getElementById("category-select");
 // Function to render bookmarks on the page
-function renderBookmarks() {
+function renderBookmarks(list) {
   bookmarkList.innerHTML = "";
-  bookmarks.forEach(function (bookmark) {
+  list.forEach(function (bookmark) {
     let listItem = document.createElement("li");
     let link = document.createElement("a");
     let editBtn = document.createElement("button");
+    editBtn.classList.add("edit-btn");
     let deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-btn");
     let categoryLabel = document.createElement("span");
     categoryLabel.textContent = " - " + bookmark.category;
     editBtn.textContent = "Edit";
@@ -36,12 +39,12 @@ function renderBookmarks() {
       // Update localStorage with the new bookmarks array
       localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 
-      renderBookmarks();
+      renderBookmarks(bookmarks);
     });
     link.textContent = bookmark.title;
     listItem.appendChild(link);
-    listItem.appendChild(editBtn);
     listItem.appendChild(categoryLabel);
+    listItem.appendChild(editBtn);
     listItem.appendChild(deleteBtn);
     bookmarkList.appendChild(listItem);
   });
@@ -74,7 +77,7 @@ bookmarkForm.addEventListener("submit", function (event) {
     // If the URL doesn't start with http:// or https://, prepend http:// return to prevent invalid URLs
     return;
   }
-    //Editing an existing bookmark if editingId is set, otherwise add a new bookmark
+  //Editing an existing bookmark if editingId is set, otherwise add a new bookmark
   if (editingId) {
     // Find the bookmark being edited by its id
     let bookmark = bookmarks.find((b) => b.id === editingId);
@@ -101,11 +104,20 @@ bookmarkForm.addEventListener("submit", function (event) {
   // Save the updated bookmarks array to localStorage
   localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
   // re-render the bookmarks to reflect the new addition
-  renderBookmarks();
+  renderBookmarks(bookmarks);
   bookmarkTitle.value = "";
   bookmarkUrl.value = "";
 
   console.log("Bookmark added:", bookmark);
 });
 // Initial render of bookmarks on page load
-renderBookmarks();
+renderBookmarks(bookmarks);
+
+searchInput.addEventListener("input", function () {
+  let filteredBookmarks = bookmarks.filter(
+    (bookmark) =>
+      bookmark.title.includes(searchInput.value) ||
+      bookmark.url.includes(searchInput.value),
+  );
+  renderBookmarks(filteredBookmarks);
+});
