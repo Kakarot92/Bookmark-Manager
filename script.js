@@ -1,8 +1,10 @@
 // Initialize bookmarks from localStorage or start with an empty array
 let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
 let editingId = null;
+let newBookmarkId = null;
 // Get references to DOM elements
 let bookmarkForm = document.getElementById("bookmark-form");
+let darkLightBtn = document.getElementById("light-dark-mode");
 let bookmarkList = document.getElementById("bookmark-list");
 let bookmarkTitle = document.getElementById("bookmark-name");
 let bookmarkUrl = document.getElementById("bookmark-url");
@@ -13,6 +15,11 @@ function renderBookmarks(list) {
   bookmarkList.innerHTML = "";
   list.forEach(function (bookmark) {
     let listItem = document.createElement("li");
+    if ( bookmark.id === newBookmarkId) { 
+      // Add a special class to the most recently added bookmark for animation
+      listItem.classList.add("new-bookmark");
+      newBookmarkId = null; // Reset newBookmarkId after applying the animation
+    }
     let link = document.createElement("a");
     let editBtn = document.createElement("button");
     editBtn.classList.add("edit-btn");
@@ -95,6 +102,8 @@ bookmarkForm.addEventListener("submit", function (event) {
       url: url,
       category: category,
     };
+    // Store the id of the newly added bookmark to apply animation in renderBookmarks
+    newBookmarkId = bookmark.id;
     // Add the new bookmark to the bookmarks array
     bookmarks.push(bookmark);
   }
@@ -121,4 +130,11 @@ searchInput.addEventListener("input", function () {
       bookmark.url.includes(searchInput.value),
   );
   renderBookmarks(filteredBookmarks);
+});
+
+darkLightBtn.addEventListener("click", function () {
+  document.body.classList.toggle("light-mode");
+  darkLightBtn.textContent = document.body.classList.contains("light-mode")
+    ? "🌙"
+    : "☀️";
 });
