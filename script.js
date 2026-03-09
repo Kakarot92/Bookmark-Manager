@@ -138,3 +138,17 @@ darkLightBtn.addEventListener("click", function () {
     ? "🌙"
     : "☀️";
 });
+
+let categoryButtons = document.querySelectorAll(".category-btn");
+categoryButtons.forEach((button) => {
+  button.addEventListener("click", function () {
+    // Remove active class from all buttons
+    categoryButtons.forEach((btn) => btn.classList.remove("active"));
+    // Add active class to clicked button
+    this.classList.add("active");
+    // Filter bookmarks by category
+    let category = this.dataset.category;
+    let filteredBookmarks = category === "All" ? bookmarks : bookmarks.filter((b) => b.category === category);
+    renderBookmarks(filteredBookmarks);
+  });
+});
