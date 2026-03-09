@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmark Manager</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Bookmark Manager</h1>
+        <button id="light-dark-mode">🌙</button>
+      </div>
+      <form id="bookmark-form">
+        <input
+          type="text"
+          id="bookmark-name"
+          placeholder="Bookmark Name"
+          required
+        />
+        <input
+          type="url"
+          id="bookmark-url"
+          placeholder="Bookmark URL"
+          required
+        />
+        <select name="category" id="category-select">
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Education">Education</option>
+          <option value="Entertainment">Entertainment</option>
+        </select>
+        <button class="add-bookmark" type="submit">Add Bookmark</button>
+      </form>
+      <div id="category-nav">
+        <button class="category-btn" data-category="All">All</button>
+        <button class="category-btn" data-category="Work">Work</button>
+        <button class="category-btn" data-category="Personal">Personal</button>
+        <button class="category-btn" data-category="Education">Education</button>
+        <button class="category-btn" data-category="Entertainment">Entertainment</button>
+      </div>
+      <search>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search Bookmarks..."
+        />
+      </search>
+      <ul id="bookmark-list"></ul>
+    </div>
+    <script src="/script.js"></script>
+  </body>
+</html>
