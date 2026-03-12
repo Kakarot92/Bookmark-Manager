@@ -15,6 +15,7 @@ function renderBookmarks(list) {
   bookmarkList.innerHTML = "";
   list.forEach(function (bookmark) {
     let listItem = document.createElement("li");
+    // Check if the current bookmark is the most recently added one
     if ( bookmark.id === newBookmarkId) { 
       // Add a special class to the most recently added bookmark for animation
       listItem.classList.add("new-bookmark");
@@ -122,7 +123,7 @@ bookmarkForm.addEventListener("submit", function (event) {
 });
 // Initial render of bookmarks on page load
 renderBookmarks(bookmarks);
-
+// Event listener for search input to filter bookmarks in real-time
 searchInput.addEventListener("input", function () {
   let filteredBookmarks = bookmarks.filter(
     (bookmark) =>
@@ -131,14 +132,14 @@ searchInput.addEventListener("input", function () {
   );
   renderBookmarks(filteredBookmarks);
 });
-
+// Event listener for dark/light mode toggle button
 darkLightBtn.addEventListener("click", function () {
   document.body.classList.toggle("light-mode");
   darkLightBtn.textContent = document.body.classList.contains("light-mode")
     ? "🌙"
     : "☀️";
 });
-
+// Event listeners for category buttons
 let categoryButtons = document.querySelectorAll(".category-btn");
 categoryButtons.forEach((button) => {
   button.addEventListener("click", function () {
