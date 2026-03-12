@@ -99,8 +99,8 @@ bookmarkForm.addEventListener("submit", function (event) {
       return;
     }
 
-    bookmark.title = title;
-    bookmark.url = url;
+    currentBookmark.title = title;
+    currentBookmark.url = url;
     currentBookmark.category = categorySelect.value;
     editingId = null;
   } else {
@@ -110,7 +110,7 @@ bookmarkForm.addEventListener("submit", function (event) {
       id: Date.now(),
       title: title,
       url: url,
-      category: category,
+      category: categorySelect.value,
     };
     // Store the id of the newly added bookmark to apply animation in renderBookmarks
     newBookmarkId = currentBookmark.id;
