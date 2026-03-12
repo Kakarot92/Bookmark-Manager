@@ -1,5 +1,6 @@
 // Initialize bookmarks from localStorage or start with an empty array
 let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+console.log(bookmarks)
 let editingId = null;
 let newBookmarkId = null;
 // Get references to DOM elements
@@ -12,7 +13,7 @@ let searchInput = document.getElementById("search-input");
 let categorySelect = document.getElementById("category-select");
 // Function to render bookmarks on the page
 function renderBookmarks(list) {
-  bookmarkList.innerHTML = "";
+  bookmarkList.innerHTML = "";  
   list.forEach(function (bookmark) {
     let listItem = document.createElement("li");
     // Check if the current bookmark is the most recently added one
@@ -87,26 +88,34 @@ bookmarkForm.addEventListener("submit", function (event) {
     return;
   }
   //Editing an existing bookmark if editingId is set, otherwise add a new bookmark
-  if (editingId) {
+
+  let currentBookmark;
+
+  if (editingId !== null) {
     // Find the bookmark being edited by its id
-    let bookmark = bookmarks.find((b) => b.id === editingId);
+    currentBookmark = bookmarks.find((b) => b.id === editingId);
+
+    if (!currentBookmark){
+      return;
+    }
+
     bookmark.title = title;
     bookmark.url = url;
-    bookmark.category = categorySelect.value;
+    currentBookmark.category = categorySelect.value;
     editingId = null;
   } else {
-    let category = categorySelect.value;
+   
 
-    let bookmark = {
+    currentBookmark = {
       id: Date.now(),
       title: title,
       url: url,
       category: category,
     };
     // Store the id of the newly added bookmark to apply animation in renderBookmarks
-    newBookmarkId = bookmark.id;
+    newBookmarkId = currentBookmark.id;
     // Add the new bookmark to the bookmarks array
-    bookmarks.push(bookmark);
+    bookmarks.push(currentBookmark);
   }
   // add title and url validation
 
@@ -118,13 +127,15 @@ bookmarkForm.addEventListener("submit", function (event) {
   renderBookmarks(bookmarks);
   bookmarkTitle.value = "";
   bookmarkUrl.value = "";
+  categorySelect.value = "";
 
-  console.log("Bookmark added:", bookmark);
+  console.log("Bookmark added:", currentBookmark);
 });
 // Initial render of bookmarks on page load
 renderBookmarks(bookmarks);
 // Event listener for search input to filter bookmarks in real-time
 searchInput.addEventListener("input", function () {
+  let searchValue = searchInput.value.toLowerCase();
   let filteredBookmarks = bookmarks.filter(
     (bookmark) =>
       bookmark.title.includes(searchInput.value) ||

@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bookmark Manager</title>
-    <link rel="stylesheet" href="/style.css" />
+    <!-- If css file is inside the same folder as your index and js file. No need to leave the folder by using / -->
+    <link rel="stylesheet" href="style.css" /> 
   </head>
   <body>
     <div class="container">
@@ -34,21 +35,21 @@
         <button class="add-bookmark" type="submit">Add Bookmark</button>
       </form>
       <div id="category-nav">
-        <button class="category-btn" data-category="All">All</button>
+        <button class="category-btn active" data-category="All">All</button>
         <button class="category-btn" data-category="Work">Work</button>
         <button class="category-btn" data-category="Personal">Personal</button>
         <button class="category-btn" data-category="Education">Education</button>
         <button class="category-btn" data-category="Entertainment">Entertainment</button>
       </div>
-      <search>
+      <div>
         <input
           type="text"
           id="search-input"
           placeholder="Search Bookmarks..."
         />
-      </search>
+      </div>
       <ul id="bookmark-list"></ul>
     </div>
-    <script src="/script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
