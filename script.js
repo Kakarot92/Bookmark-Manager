@@ -11,6 +11,7 @@ let bookmarkTitle = document.getElementById("bookmark-name");
 let bookmarkUrl = document.getElementById("bookmark-url");
 let searchInput = document.getElementById("search-input");
 let categorySelect = document.getElementById("category-select");
+let fetchBtn = document.getElementById("fetch-btn");
 // Function to render bookmarks on the page
 function renderBookmarks(list) {
   bookmarkList.innerHTML = "";  
@@ -162,5 +163,18 @@ categoryButtons.forEach((button) => {
     let category = this.dataset.category;
     let filteredBookmarks = category === "All" ? bookmarks : bookmarks.filter((b) => b.category === category);
     renderBookmarks(filteredBookmarks);
+  });
+});
+
+fetchBtn.addEventListener("click", function () {
+  let url = bookmarkUrl.value.trim();
+  if (!url) {
+    alert("Please enter a URL to fetch.");
+    return;
+  }
+  fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`)
+  .then(response => response.json())
+  .then(data => {
+    bookmarkTitle.value = data.data.title;
   });
 });
